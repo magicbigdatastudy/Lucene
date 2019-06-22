@@ -9,6 +9,7 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.junit.Test;
@@ -43,6 +44,7 @@ public class IndexCreate {
         //对于一些没有必要存储在文件中的数据可以调用Store.NO
         //在创建索引文件时，该字段的值，不会保存到文档中，即使搜到
         //了文档对象，也不能获取
+        //域的类型，String--varchar--StringField/TextField
         doc1.add(new StringField("id","100", Field.Store.NO));
         doc1.add(new TextField("title","三星 Galaxy S 轻奢版", Field.Store.YES));
         doc1.add(new TextField("sell_point","白条12期免息", Field.Store.YES));
@@ -58,6 +60,45 @@ public class IndexCreate {
         writer.close();
         dir.close();
 
+    }
+    //更新索引
+    @Test
+    public void updateIndex() throws Exception{
+        Path indexPath = Paths.get("index.dir");
+        Directory directory = FSDirectory.open(indexPath);
+        Analyzer analyzer = new IKAnalyzer6x();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        IndexWriter writer = new IndexWriter(directory,config);
+        Document doc = new Document();
+        doc.add(new StringField("id","2", Field.Store.YES));
+        doc.add(new TextField("title","华夏大平板", Field.Store.YES));
+        doc.add(new TextField("sell_point","好用", Field.Store.YES));
+        //第二步，根据条件更新覆盖原文档对象
+        //参与Term：
+        // 参数1:域名，根据哪个项目更新
+        // 参数：域数据的分词词项，三星，搜索带有三星分词词项
+        //第一个document对象进行覆盖
+        //参数doc数据替代者
+        writer.updateDocument(new Term("title","苹果"),doc);
+
+        writer.commit();
+        writer.close();
+        directory.close();
+    }
+
+    //删除索引
+    @Test
+    public void deleteIndex() throws Exception{
+        Path indexPath = Paths.get("index.dir");
+        Directory directory = FSDirectory.open(indexPath);
+        Analyzer analyzer = new IKAnalyzer6x();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriter writer = new IndexWriter(directory,config);
+        //删除 deleteDocuments的方法参数不同
+        //词项对比删除：必须词项完全匹配，才删除
+        writer.deleteDocuments(new Term("sell_point","不要钱"));
+        //删除完成
     }
 
 
