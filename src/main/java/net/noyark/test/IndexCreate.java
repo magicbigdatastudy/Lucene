@@ -87,6 +87,9 @@ public class IndexCreate {
         directory.close();
     }
 
+
+
+    
     //删除索引
     @Test
     public void deleteIndex() throws Exception{
