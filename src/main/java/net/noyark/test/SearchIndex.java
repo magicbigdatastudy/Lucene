@@ -224,5 +224,5 @@ public class SearchIndex {
 //            System.out.println("sell_point:"+document.get("sell_point"));
         }
     }
-    
+
 }
