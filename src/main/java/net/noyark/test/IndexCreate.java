@@ -45,10 +45,10 @@ public class IndexCreate {
         //在创建索引文件时，该字段的值，不会保存到文档中，即使搜到
         //了文档对象，也不能获取
         //域的类型，String--varchar--StringField/TextField
-        doc1.add(new StringField("id","100", Field.Store.NO));
+        doc1.add(new StringField("id","1", Field.Store.NO));
         doc1.add(new TextField("title","三星 Galaxy S 轻奢版", Field.Store.YES));
         doc1.add(new TextField("sell_point","白条12期免息", Field.Store.YES));
-        doc2.add(new StringField("id","100", Field.Store.NO));
+        doc2.add(new StringField("id","2", Field.Store.NO));
         doc2.add(new TextField("title","苹果 Galaxy S 轻奢版", Field.Store.YES));
         doc2.add(new TextField("sell_point","不要钱", Field.Store.YES));
         //第四步，将文档数据输出到索引文件
